@@ -9,7 +9,7 @@ export class GoalRepository extends BaseRepository<IGoal> {
 
   /**
    * Retrieves all goals associated with a specific user, sorted by creation date descending.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @returns A promise resolving to an array of goal documents.
    */
@@ -19,7 +19,7 @@ export class GoalRepository extends BaseRepository<IGoal> {
 
   /**
    * Retrieves all active goals associated with a specific user, sorted by creation date descending.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @returns A promise resolving to an array of active goal documents.
    */
@@ -29,7 +29,7 @@ export class GoalRepository extends BaseRepository<IGoal> {
 
   /**
    * Updates the current reduction percentage value on a goal.
-   * 
+   *
    * @param goalId - The unique ID of the goal.
    * @param currentValue - The current reduction progress percentage.
    * @returns A promise resolving to the updated goal document, or null if not found.

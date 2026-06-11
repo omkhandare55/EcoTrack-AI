@@ -4,6 +4,7 @@ import { Input } from '../common/Input';
 import { Button } from '../common/Button';
 import { Alert } from '../common/Alert';
 import { ACTIVITY_CATEGORIES } from '../../constants';
+import type { ActivityCategory } from '../../types';
 
 // Subcategories and their standard units
 const SUBCATEGORIES: Record<string, { label: string; unit: string }[]> = {
@@ -64,7 +65,7 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ onSuccess }) => {
     }
   }, [category]);
 
-  const handleSubcategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSubcategoryChange = (e: React.ChangeEvent<HTMLSelectElement>): void => {
     const selectedLabel = e.target.value;
     setSubcategory(selectedLabel);
 
@@ -75,7 +76,7 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ onSuccess }) => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     setErrorMsg(null);
 
@@ -87,15 +88,16 @@ export const ActivityForm: React.FC<ActivityFormProps> = ({ onSuccess }) => {
 
     try {
       await createActivityMutation.mutateAsync({
-        category: category as any,
+        category: category as ActivityCategory,
         subcategory,
         value: numericValue,
         unit,
         date: new Date(date).toISOString(),
       });
       onSuccess();
-    } catch (err: any) {
-      setErrorMsg(err.response?.data?.message || 'Failed to log activity. Please try again.');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setErrorMsg(error.response?.data?.message || 'Failed to log activity. Please try again.');
     }
   };
 

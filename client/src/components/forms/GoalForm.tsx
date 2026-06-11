@@ -4,6 +4,7 @@ import { Input } from '../common/Input';
 import { Button } from '../common/Button';
 import { Alert } from '../common/Alert';
 import { ACTIVITY_CATEGORIES, GOAL_PERIODS } from '../../constants';
+import type { ActivityCategory, GoalPeriod } from '../../types';
 
 interface GoalFormProps {
   onSuccess: () => void;
@@ -20,7 +21,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({ onSuccess }) => {
   const [endDate, setEndDate] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     setErrorMsg(null);
 
@@ -38,15 +39,16 @@ export const GoalForm: React.FC<GoalFormProps> = ({ onSuccess }) => {
     try {
       await createGoalMutation.mutateAsync({
         title,
-        category: category as any,
+        category: category as ActivityCategory,
         targetReduction: numericReduction,
-        period: period as any,
+        period: period as GoalPeriod,
         startDate: new Date(startDate).toISOString(),
         endDate: endDate ? new Date(endDate).toISOString() : undefined,
       });
       onSuccess();
-    } catch (err: any) {
-      setErrorMsg(err.response?.data?.message || 'Failed to create goal. Please try again.');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setErrorMsg(error.response?.data?.message || 'Failed to create goal. Please try again.');
     }
   };
 

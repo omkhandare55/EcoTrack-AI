@@ -118,10 +118,12 @@ describe('AchievementService Unit Tests', () => {
       const result = await achievementService.checkAndAward('user-123');
       expect(result.length).toBe(1);
       expect(result[0].badge).toBe('first_activity');
-      expect(Achievement.create).toHaveBeenCalledWith(expect.objectContaining({
-        userId: 'user-123',
-        badge: 'first_activity',
-      }));
+      expect(Achievement.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          userId: 'user-123',
+          badge: 'first_activity',
+        }),
+      );
     });
 
     it('should award ten_activities and first_activity if count is 10', async () => {
@@ -153,8 +155,13 @@ describe('AchievementService Unit Tests', () => {
       d7.setDate(d7.getDate() - 6);
 
       mockFindActivitiesChain.exec.mockResolvedValue([
-        { date: d1 }, { date: d2 }, { date: d3 }, { date: d4 },
-        { date: d5 }, { date: d6 }, { date: d7 },
+        { date: d1 },
+        { date: d2 },
+        { date: d3 },
+        { date: d4 },
+        { date: d5 },
+        { date: d6 },
+        { date: d7 },
       ]);
 
       const mockCreated = { toObject: () => ({ badge: 'seven_day_streak' }) };
@@ -175,7 +182,7 @@ describe('AchievementService Unit Tests', () => {
       // first month aggregate = 100 kg, this month aggregate = 80 kg -> 20% reduction
       (Activity.aggregate as jest.Mock)
         .mockResolvedValueOnce([{ total: 100 }]) // first month
-        .mockResolvedValueOnce([{ total: 80 }]);  // this month
+        .mockResolvedValueOnce([{ total: 80 }]); // this month
 
       const mockCreated = { toObject: () => ({ badge: 'reduced_10_percent' }) };
       (Achievement.create as jest.Mock).mockResolvedValue(mockCreated);

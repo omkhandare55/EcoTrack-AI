@@ -1,6 +1,12 @@
 import { FilterQuery, PipelineStage } from 'mongoose';
 import Activity from '../models/Activity';
-import type { IActivity, ICategoryBreakdown, IAnalyticsTrend, PeriodType } from '../types';
+import type {
+  IActivity,
+  ICategoryBreakdown,
+  IAnalyticsTrend,
+  PeriodType,
+  IPaginatedResponse,
+} from '../types';
 import { BaseRepository, FindManyOptions } from './BaseRepository';
 
 interface ActivityFilters {
@@ -17,12 +23,15 @@ export class ActivityRepository extends BaseRepository<IActivity> {
   /**
    * Retrieves a paginated and filtered list of activities for a specific user.
    * Supports filtering by category and date ranges.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @param options - Pagination options, sorting constraints, and filter fields.
    * @returns A promise resolving to a paginated response of activity documents.
    */
-  async findByUserId(userId: string, options: FindManyOptions & ActivityFilters = {}) {
+  async findByUserId(
+    userId: string,
+    options: FindManyOptions & ActivityFilters = {},
+  ): Promise<IPaginatedResponse<IActivity>> {
     const filter: FilterQuery<IActivity> = { userId };
 
     if (options.category) {
@@ -45,7 +54,7 @@ export class ActivityRepository extends BaseRepository<IActivity> {
   /**
    * Aggregates total carbon emissions grouped by a specific time period (day, week, month, year)
    * for a user within a specified timeframe.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @param period - The grouping time period ('day', 'week', 'month', 'year').
    * @param startDate - The starting boundary date.
@@ -90,7 +99,7 @@ export class ActivityRepository extends BaseRepository<IActivity> {
 
   /**
    * Computes category-wise emission totals and percentages for a specific user and timeframe.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @param startDate - The starting boundary date.
    * @param endDate - The ending boundary date.
@@ -137,7 +146,7 @@ export class ActivityRepository extends BaseRepository<IActivity> {
 
   /**
    * Computes the grand total carbon emissions (in kg) for a specific user and timeframe.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @param startDate - The starting boundary date.
    * @param endDate - The ending boundary date.
@@ -165,7 +174,7 @@ export class ActivityRepository extends BaseRepository<IActivity> {
 
   /**
    * Computes the daily average carbon emissions (in kg/day) for a specific user over the last N days.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @param days - The number of days to look back.
    * @returns A promise resolving to the calculated daily average.

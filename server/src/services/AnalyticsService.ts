@@ -9,7 +9,7 @@ export class AnalyticsService {
    * - Category-wise carbon footprint breakdown for the current month.
    * - Daily average carbon emissions over the last 30 days.
    * - Comparison metrics showing week-over-week and month-over-month percentage changes.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @returns A promise resolving to the user's detailed emission analytics summary.
    * @throws {AppError} If there is a database error or invalid query state.
@@ -58,7 +58,7 @@ export class AnalyticsService {
 
   /**
    * Retrieves aggregated time-series carbon emission trends for charts.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @param period - The grouping time period ('day', 'week', 'month', 'year'). Defaults to 'day'.
    * @param rangeDays - The number of historical days to fetch trend data for. Defaults to 30.
@@ -80,7 +80,7 @@ export class AnalyticsService {
   /**
    * Retrieves a detailed category-wise carbon footprint breakdown for a specific date range.
    * Defaults to the current month if date filters are not provided.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @param startDate - Optional starting boundary date string (ISO format).
    * @param endDate - Optional ending boundary date string (ISO format).
@@ -101,7 +101,7 @@ export class AnalyticsService {
   /**
    * Compares the user's current week and month emissions with their previous week and month.
    * Calculates absolute emission values and percentage differences.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @returns A promise resolving to comparison statistics for weeks and months.
    */

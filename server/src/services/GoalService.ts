@@ -7,9 +7,9 @@ import type { CreateGoalInput, UpdateGoalInput } from '../validators/goal.valida
 export class GoalService {
   /**
    * Creates a new emission reduction goal for a user.
-   * Computes a baseline using the user's historical emissions for the selected category 
+   * Computes a baseline using the user's historical emissions for the selected category
    * over the corresponding period (e.g., last 7 days for a weekly goal).
-   * 
+   *
    * @param userId - The unique ID of the user creating the goal.
    * @param data - The goal creation payload (title, category, target reduction, period, etc.).
    * @returns A promise resolving to the created goal document.
@@ -51,7 +51,7 @@ export class GoalService {
 
   /**
    * Retrieves all goals associated with a specific user, sorted newest first.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @returns A promise resolving to an array of goal documents.
    */
@@ -61,7 +61,7 @@ export class GoalService {
 
   /**
    * Updates an existing goal's attributes after verifying user ownership.
-   * 
+   *
    * @param userId - The unique ID of the authenticated user.
    * @param goalId - The unique ID of the goal to update.
    * @param data - The partial goal fields to update.
@@ -86,7 +86,7 @@ export class GoalService {
 
   /**
    * Deletes an existing goal after verifying user ownership.
-   * 
+   *
    * @param userId - The unique ID of the authenticated user.
    * @param goalId - The unique ID of the goal to delete.
    * @returns A promise resolving when the goal has been successfully deleted.
@@ -107,7 +107,7 @@ export class GoalService {
    * Recalculates progress for all active goals of a user.
    * Compares baseline emissions with current emissions in the goal's timeframe to update
    * the completion percentage, and updates the status to 'completed' or 'failed' if bounds are reached.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @returns A promise resolving when all active goals' progress is updated.
    */

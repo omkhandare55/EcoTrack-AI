@@ -21,6 +21,7 @@ Since serverless backends like Google Cloud Run scale down to zero and are state
 Google Cloud Run is a fully managed serverless platform that automatically scales your containerized backend.
 
 ### Prerequisites
+
 1. Download and install the [Google Cloud SDK](https://cloud.google.com/sdk/docs/install).
 2. Authenticate the CLI:
    ```bash
@@ -39,17 +40,21 @@ Google Cloud Run is a fully managed serverless platform that automatically scale
    ```
 
 ### Deploying the Backend
+
 Run the following commands from the **root directory** of the repository:
 
 1. **Submit to Cloud Build**:
    Build your container image in the cloud using the server Dockerfile:
+
    ```bash
    gcloud builds submit --tag gcr.io/PROJECT_ID/ecotrack-backend -f server/Dockerfile .
    ```
-   *(Replace `PROJECT_ID` with your actual GCP project ID).*
+
+   _(Replace `PROJECT_ID` with your actual GCP project ID)._
 
 2. **Deploy to Cloud Run**:
    Launch the container into a serverless service:
+
    ```bash
    gcloud run deploy ecotrack-backend \
      --image gcr.io/PROJECT_ID/ecotrack-backend \
@@ -58,7 +63,8 @@ Run the following commands from the **root directory** of the repository:
      --region us-central1 \
      --set-env-vars="NODE_ENV=production,MONGODB_URI=mongodb+srv://<db_username>:<db_password>@cluster0.xxxxxx.mongodb.net/ecotrack-ai?retryWrites=true&w=majority,JWT_SECRET=YOUR_SECURE_JWT_SECRET,COOKIE_SECRET=YOUR_SECURE_COOKIE_SECRET,CORS_ORIGIN=https://YOUR_VERCEL_FRONTEND_URL.vercel.app"
    ```
-   *(Ensure to replace `PROJECT_ID` with your GCP Project ID, set your own secure secret keys, and replace `CORS_ORIGIN` with your Vercel URL once the frontend is live).*
+
+   _(Ensure to replace `PROJECT_ID` with your GCP Project ID, set your own secure secret keys, and replace `CORS_ORIGIN` with your Vercel URL once the frontend is live)._
 
 3. **Get the Backend URL**:
    The output of the deploy command will print the service URL, for example:
@@ -71,6 +77,7 @@ Run the following commands from the **root directory** of the repository:
 Vercel provides instant hosting for Vite + React static single-page applications.
 
 ### Configuration (`vercel.json`)
+
 The client project includes a pre-configured `client/vercel.json` file. Update the `destination` URL in `client/vercel.json` to point to your deployed Google Cloud Run backend URL:
 
 ```json
@@ -89,18 +96,21 @@ The client project includes a pre-configured `client/vercel.json` file. Update t
 ```
 
 ### Deploying via Vercel Dashboard
+
 1. Go to the [Vercel Dashboard](https://vercel.com/dashboard) and click **Add New** > **Project**.
 2. Import your GitHub repository (`omkhandare55/EcoTrack-AI`).
 3. Set the following Project Settings:
    - **Framework Preset**: `Vite` (automatically detected).
-   - **Root Directory**: `client` *(Important: set this to the frontend subdirectory)*.
+   - **Root Directory**: `client` _(Important: set this to the frontend subdirectory)_.
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
 4. Click **Deploy**. Vercel will build and host your frontend.
 5. Copy your new Vercel deployment URL (e.g., `https://ecotrack-ai.vercel.app`).
 
 ### Post-Deployment Step
+
 Once your Vercel URL is live, update your backend's `CORS_ORIGIN` environment variable on GCloud so requests are authorized:
+
 ```bash
 gcloud run services update ecotrack-backend \
   --region us-central1 \
@@ -112,5 +122,6 @@ gcloud run services update ecotrack-backend \
 ## 4. Local Verification & Debugging
 
 If you face CORS or session authentication issues in production:
+
 - Make sure that **withCredentials** is set to `true` in Axios (`client/src/services/apiClient.ts`).
 - Make sure the backend cookie options include `secure: true` and `sameSite: 'none'` (or same-site rules if domains match) to allow cross-site cookie transfers between the Vercel domain and the Cloud Run domain.

@@ -3,7 +3,7 @@ import app from '../../app';
 import * as dbHandler from '../dbHandler';
 import User from '../../models/User';
 
-beforeAll(async () => await dbHandler.connect());
+beforeAll(async () => await dbHandler.connect(), 300000);
 afterEach(async () => await dbHandler.clearDatabase());
 afterAll(async () => await dbHandler.closeDatabase());
 

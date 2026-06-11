@@ -59,7 +59,7 @@ describe('BaseRepository Unit Tests', () => {
 
     const result = await repository.findMany(
       { category: 'transport' },
-      { page: 2, limit: 5, sort: 'name,-date' }
+      { page: 2, limit: 5, sort: 'name,-date' },
     );
 
     expect(mockModel.find).toHaveBeenCalledWith({ category: 'transport' });
@@ -118,7 +118,7 @@ describe('BaseRepository Unit Tests', () => {
     expect(mockModel.findByIdAndUpdate).toHaveBeenCalledWith(
       '123',
       { name: 'new name' },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
     expect(result).toEqual({ _id: '123', updated: true });
   });

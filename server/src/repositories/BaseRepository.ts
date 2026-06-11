@@ -17,7 +17,7 @@ export class BaseRepository<T extends Document> {
 
   /**
    * Finds a document by its unique database ID.
-   * 
+   *
    * @param id - The hexadecimal string ID of the document.
    * @returns A promise resolving to the document if found, or null otherwise.
    */
@@ -27,7 +27,7 @@ export class BaseRepository<T extends Document> {
 
   /**
    * Finds a single document matching the specified query filter criteria.
-   * 
+   *
    * @param filter - The Mongoose query filter object.
    * @returns A promise resolving to the matching document, or null if none is found.
    */
@@ -38,7 +38,7 @@ export class BaseRepository<T extends Document> {
   /**
    * Finds and paginates multiple documents matching the query filter criteria.
    * Supports sorting options (e.g. comma-separated fields, sorting order maps).
-   * 
+   *
    * @param filter - The Mongoose query filter object. Defaults to an empty object.
    * @param options - Pagination options (page, limit) and sorting specifications.
    * @returns A promise resolving to a paginated response object containing matching documents and metadata.
@@ -83,7 +83,7 @@ export class BaseRepository<T extends Document> {
 
   /**
    * Inserts a new document into the collection.
-   * 
+   *
    * @param data - The partial object data matching the schema of the document.
    * @returns A promise resolving to the created document.
    */
@@ -94,7 +94,7 @@ export class BaseRepository<T extends Document> {
 
   /**
    * Updates an existing document matching the specified ID with update query operators.
-   * 
+   *
    * @param id - The unique ID of the document.
    * @param data - The Mongoose update query payload.
    * @returns A promise resolving to the updated document, or null if the document was not found.
@@ -108,7 +108,7 @@ export class BaseRepository<T extends Document> {
 
   /**
    * Deletes a single document by its unique ID.
-   * 
+   *
    * @param id - The unique ID of the document to delete.
    * @returns A promise resolving to the deleted document, or null if it was not found.
    */
@@ -118,7 +118,7 @@ export class BaseRepository<T extends Document> {
 
   /**
    * Counts the number of documents in the collection matching the query criteria.
-   * 
+   *
    * @param filter - The Mongoose query filter object. Defaults to an empty object.
    * @returns A promise resolving to the count of matching documents.
    */

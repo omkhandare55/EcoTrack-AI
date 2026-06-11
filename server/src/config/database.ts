@@ -44,13 +44,13 @@ export async function connectDatabase(): Promise<void> {
     } catch (err) {
       retries += 1;
       const message = err instanceof Error ? err.message : String(err);
-      console.error(
-        `❌  MongoDB connection attempt ${retries}/${MAX_RETRIES} failed: ${message}`,
-      );
+      console.error(`❌  MongoDB connection attempt ${retries}/${MAX_RETRIES} failed: ${message}`);
 
       if (retries >= MAX_RETRIES) {
         if (env.NODE_ENV === 'development') {
-          console.error('⚠️  Failed to connect to local MongoDB. Attempting failover to in-memory MongoDB Server...');
+          console.error(
+            '⚠️  Failed to connect to local MongoDB. Attempting failover to in-memory MongoDB Server...',
+          );
           try {
             const { MongoMemoryServer } = await import('mongodb-memory-server');
             const mongod = await MongoMemoryServer.create();

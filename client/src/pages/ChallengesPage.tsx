@@ -221,7 +221,7 @@ export const ChallengesPage: React.FC = () => {
                 <tbody>
                   {leaderboard.map((user, idx) => (
                     <tr
-                      key={user._id}
+                      key={user.userId}
                       style={{
                         borderBottom:
                           idx < leaderboard.length - 1 ? '1px solid var(--border)' : 'none',

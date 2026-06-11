@@ -6,7 +6,7 @@ import type { PeriodType } from '../types';
 
 /**
  * Controller endpoint to retrieve a high-level dashboard analytics summary for the user.
- * 
+ *
  * @route GET /api/v1/analytics/summary
  * @access Private
  * @param req - Express request object.
@@ -27,7 +27,7 @@ export const getSummary = catchAsync(async (req: Request, res: Response) => {
 
 /**
  * Controller endpoint to retrieve time-series carbon emission trends for charts.
- * 
+ *
  * @route GET /api/v1/analytics/trends
  * @access Private
  * @param req - Express request object with query parameters.
@@ -54,7 +54,7 @@ export const getTrends = catchAsync(async (req: Request, res: Response) => {
 
 /**
  * Controller endpoint to retrieve detailed category-wise carbon breakdown for a date range.
- * 
+ *
  * @route GET /api/v1/analytics/breakdown
  * @access Private
  * @param req - Express request object with optional date filters in query.
@@ -81,7 +81,7 @@ export const getBreakdown = catchAsync(async (req: Request, res: Response) => {
 
 /**
  * Controller endpoint to retrieve a comparison of carbon footprint metrics for the current vs previous periods.
- * 
+ *
  * @route GET /api/v1/analytics/comparison
  * @access Private
  * @param req - Express request object.
@@ -102,7 +102,7 @@ export const getComparison = catchAsync(async (req: Request, res: Response) => {
 
 /**
  * Controller endpoint to retrieve future monthly carbon emission predictions.
- * 
+ *
  * @route GET /api/v1/analytics/predictions
  * @access Private
  * @param req - Express request object.

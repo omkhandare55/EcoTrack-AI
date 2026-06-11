@@ -137,7 +137,7 @@ export class RecommendationService {
    * personalized sustainability recommendations.
    * Categories with higher emission volumes are prioritized. If no activity
    * data is present, default recommendations are returned.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @returns A promise resolving to an array of personalized recommendations.
    */
@@ -191,7 +191,7 @@ export class RecommendationService {
 
   /**
    * Helper method to map a sorted category index to a priority label ('high', 'medium', or 'low').
-   * 
+   *
    * @param index - The index of the category in the sorted emissions list.
    * @returns The corresponding priority string.
    */

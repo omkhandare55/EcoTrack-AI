@@ -61,7 +61,7 @@ export class AuthService {
   generateToken(userId: string): string {
     const payload: JwtPayload = { id: userId };
     return jwt.sign(payload, env.JWT_SECRET, {
-      expiresIn: env.JWT_EXPIRES_IN as any,
+      expiresIn: env.JWT_EXPIRES_IN as jwt.SignOptions['expiresIn'],
     });
   }
 

@@ -55,7 +55,7 @@ export const RegisterForm: React.FC = () => {
     setPasswordStrength({ score, label, color });
   }, [password]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     setErrorMsg(null);
 
@@ -79,8 +79,9 @@ export const RegisterForm: React.FC = () => {
     try {
       await register({ name, email, password });
       navigate('/');
-    } catch (err: any) {
-      setErrorMsg(err.response?.data?.message || 'Failed to create account. Please try again.');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setErrorMsg(error.response?.data?.message || 'Failed to create account. Please try again.');
     } finally {
       setIsLoading(false);
     }

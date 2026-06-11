@@ -1,8 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import type { UseQueryResult, UseMutationResult } from '@tanstack/react-query';
 import { activityService } from '../services/activityService';
-import type { ActivityFormData } from '../types';
+import type { Activity, PaginatedResponse, ActivityFormData } from '../types';
 
-export const useActivities = (params?: Record<string, any>) => {
+export const useActivities = (
+  params?: Record<string, unknown>,
+): UseQueryResult<PaginatedResponse<Activity>, Error> => {
   return useQuery({
     queryKey: ['activities', params],
     queryFn: () => activityService.getActivities(params),
@@ -10,7 +13,12 @@ export const useActivities = (params?: Record<string, any>) => {
   });
 };
 
-export const useCreateActivity = () => {
+export const useCreateActivity = (): UseMutationResult<
+  { activity: Activity },
+  Error,
+  ActivityFormData,
+  unknown
+> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -26,7 +34,7 @@ export const useCreateActivity = () => {
   });
 };
 
-export const useDeleteActivity = () => {
+export const useDeleteActivity = (): UseMutationResult<void, Error, string, unknown> => {
   const queryClient = useQueryClient();
 
   return useMutation({

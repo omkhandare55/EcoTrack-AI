@@ -2,7 +2,7 @@ import { apiClient } from './apiClient';
 import type { Activity, PaginatedResponse, ActivityFormData } from '../types';
 
 export const activityService = {
-  async getActivities(params?: Record<string, any>): Promise<PaginatedResponse<Activity>> {
+  async getActivities(params?: Record<string, unknown>): Promise<PaginatedResponse<Activity>> {
     const res = await apiClient.get<PaginatedResponse<Activity>>('/activities', { params });
     return res.data;
   },

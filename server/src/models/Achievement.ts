@@ -31,8 +31,8 @@ const achievementSchema = new Schema<IAchievement>(
   },
   {
     toJSON: {
-      transform(_doc, ret) {
-        delete (ret as any).__v;
+      transform(_doc: unknown, ret: Record<string, unknown>): Record<string, unknown> {
+        delete ret.__v;
         return ret;
       },
     },

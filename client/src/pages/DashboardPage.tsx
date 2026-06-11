@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAnalyticsSummary } from '../hooks/useAnalytics';
+import { useAnalyticsSummary, useAnalyticsTrends } from '../hooks/useAnalytics';
 import { useGoals } from '../hooks/useGoals';
 import { useActivities } from '../hooks/useActivities';
 import { Card } from '../components/common/Card';
@@ -13,6 +13,14 @@ import { CategoryBreakdownChart } from '../components/charts/CategoryBreakdownCh
 import { GoalProgressChart } from '../components/charts/GoalProgressChart';
 import { formatCarbonValue, formatPercentage, formatDate } from '../utils/formatters';
 
+const CATEGORY_ICONS: Record<string, string> = {
+  transportation: '🚗',
+  electricity: '⚡',
+  food: '🍽️',
+  water: '💧',
+  shopping: '🛍️',
+};
+
 export const DashboardPage: React.FC = () => {
   const {
     data: summary,
@@ -21,12 +29,13 @@ export const DashboardPage: React.FC = () => {
   } = useAnalyticsSummary();
   const { data: goalsData, isLoading: isGoalsLoading } = useGoals();
   const { data: activitiesData, isLoading: isActivitiesLoading } = useActivities({ limit: 5 });
+  const { data: trendsData } = useAnalyticsTrends('day', 30);
 
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
 
   if (isSummaryLoading || isGoalsLoading || isActivitiesLoading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '4rem' }}>
+      <div className="dashboard-loading">
         <Spinner size="lg" label="Loading dashboard data..." />
       </div>
     );
@@ -45,139 +54,86 @@ export const DashboardPage: React.FC = () => {
 
   // Calculable environmental equivalences based on monthly total
   const monthlyCarbon = totalEmissions.thisMonth;
-  // Assumes average carbon offset of an adult tree is 22kg/year, roughly 1.83kg/month
   const treesEquivalent = Math.round(monthlyCarbon / 1.83);
-  // Assumes average passenger vehicle emissions of 0.2kg/km
   const carKmEquivalent = Math.round(monthlyCarbon / 0.2);
-  // Assumes average household electricity emission factor of 0.4kg/kWh
   const electricityKwhEquivalent = Math.round(monthlyCarbon / 0.4);
 
   const activeGoals = (goalsData || []).filter((g) => g.status === 'active').slice(0, 3);
   const recentActivities = activitiesData?.data || [];
 
   return (
-    <div className="dashboard-grid-container">
-      <div
-        className="dashboard-header-row"
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '2rem',
-        }}
-      >
+    <div className="dashboard-page animate-fade-in-up">
+      {/* Header Section */}
+      <div className="dashboard-header-bar">
         <div>
-          <h1 className="page-title" style={{ fontSize: '2rem', fontWeight: 800 }}>
-            Dashboard
-          </h1>
-          <p style={{ color: 'var(--text-secondary)' }}>
+          <h1 className="page-title">Dashboard</h1>
+          <p className="page-subtitle">
             Welcome to EcoTrack AI. Here is your environmental footprint summary.
           </p>
         </div>
         <Button onClick={() => setIsLogModalOpen(true)}>
-          <span aria-hidden="true" style={{ marginRight: '8px' }}>
+          <span aria-hidden="true" className="btn-icon-prefix">
             +
-          </span>{' '}
+          </span>
           Log Activity
         </Button>
       </div>
 
       {/* Stats Cards Row */}
-      <div
-        className="stats-cards-grid"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '1rem',
-          marginBottom: '2rem',
-        }}
-      >
-        <Card title="Today's Carbon" tagName="section">
-          <p
-            className="stat-number"
-            style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--accent-primary)' }}
-          >
+      <div className="dashboard-grid">
+        <Card title="Today's Carbon" tagName="section" className="stat-card">
+          <p className="stat-number stat-number--accent">
             {formatCarbonValue(totalEmissions.today)}
           </p>
-          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Logged today</span>
+          <span className="stat-label">Logged today</span>
         </Card>
 
-        <Card title="This Week" tagName="section">
-          <p className="stat-number" style={{ fontSize: '1.75rem', fontWeight: 800 }}>
-            {formatCarbonValue(totalEmissions.thisWeek)}
-          </p>
+        <Card title="This Week" tagName="section" className="stat-card">
+          <p className="stat-number">{formatCarbonValue(totalEmissions.thisWeek)}</p>
           <span
-            style={{
-              fontSize: '0.85rem',
-              color: comparison.weekOverWeek > 0 ? 'var(--danger)' : 'var(--success)',
-            }}
+            className={`stat-change ${comparison.weekOverWeek > 0 ? 'stat-change--negative' : 'stat-change--positive'}`}
           >
             {comparison.weekOverWeek > 0 ? '▲' : '▼'}{' '}
             {formatPercentage(Math.abs(comparison.weekOverWeek))} vs last week
           </span>
         </Card>
 
-        <Card title="This Month" tagName="section">
-          <p className="stat-number" style={{ fontSize: '1.75rem', fontWeight: 800 }}>
-            {formatCarbonValue(totalEmissions.thisMonth)}
-          </p>
+        <Card title="This Month" tagName="section" className="stat-card">
+          <p className="stat-number">{formatCarbonValue(totalEmissions.thisMonth)}</p>
           <span
-            style={{
-              fontSize: '0.85rem',
-              color: comparison.monthOverMonth > 0 ? 'var(--danger)' : 'var(--success)',
-            }}
+            className={`stat-change ${comparison.monthOverMonth > 0 ? 'stat-change--negative' : 'stat-change--positive'}`}
           >
             {comparison.monthOverMonth > 0 ? '▲' : '▼'}{' '}
             {formatPercentage(Math.abs(comparison.monthOverMonth))} vs last month
           </span>
         </Card>
 
-        <Card title="Daily Average" tagName="section">
-          <p className="stat-number" style={{ fontSize: '1.75rem', fontWeight: 800 }}>
-            {formatCarbonValue(dailyAverage)}
-          </p>
-          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>30-day average</span>
+        <Card title="Daily Average" tagName="section" className="stat-card">
+          <p className="stat-number">{formatCarbonValue(dailyAverage)}</p>
+          <span className="stat-label">30-day average</span>
         </Card>
       </div>
 
       {/* Main Charts Layout */}
-      <div
-        className="charts-split-grid"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '2fr 1fr',
-          gap: '1.5rem',
-          marginBottom: '2rem',
-        }}
-      >
+      <div className="dashboard-charts">
         <Card title="Monthly Trend (Past 30 Days)" tagName="section">
-          <EmissionTrendChart data={[]} period="day" /> {/* Injected empty data handles defaults */}
+          <EmissionTrendChart data={trendsData || []} period="day" />
         </Card>
 
         <Card title="Category Breakdown (This Month)" tagName="section">
           {categoryBreakdown.length > 0 ? (
             <CategoryBreakdownChart data={categoryBreakdown} />
           ) : (
-            <p style={{ textAlign: 'center', padding: '3rem 0', color: 'var(--text-muted)' }}>
-              No data logged this month.
-            </p>
+            <p className="empty-state-text">No data logged this month.</p>
           )}
         </Card>
       </div>
 
       {/* Goals & Activities Split */}
-      <div
-        className="dashboard-lists-split"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '1.5rem',
-          marginBottom: '2rem',
-        }}
-      >
+      <div className="dashboard-bottom">
         <Card title="Active Goals" tagName="section">
           {activeGoals.length > 0 ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div className="goals-list-compact">
               {activeGoals.map((goal) => (
                 <GoalProgressChart
                   key={goal._id}
@@ -188,7 +144,7 @@ export const DashboardPage: React.FC = () => {
               ))}
             </div>
           ) : (
-            <p style={{ color: 'var(--text-muted)' }}>
+            <p className="empty-state-text">
               You have no active goals set. Set one to start tracking carbon reduction progress!
             </p>
           )}
@@ -196,41 +152,31 @@ export const DashboardPage: React.FC = () => {
 
         <Card title="Recent Activity Log" tagName="section">
           {recentActivities.length > 0 ? (
-            <ul
-              className="dashboard-activity-list"
-              style={{
-                listStyle: 'none',
-                padding: 0,
-                margin: 0,
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1rem',
-              }}
-            >
+            <ul className="activity-feed">
               {recentActivities.map((act) => (
-                <li
-                  key={act._id}
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    paddingBottom: '0.75rem',
-                    borderBottom: '1px solid var(--border)',
-                  }}
-                >
-                  <div>
-                    <p style={{ fontWeight: 600 }}>{act.subcategory}</p>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                <li key={act._id} className="activity-feed-item">
+                  <span
+                    className="activity-feed-icon"
+                    style={{
+                      background: `var(--accent-primary-light)`,
+                    }}
+                  >
+                    {CATEGORY_ICONS[act.category] || '📋'}
+                  </span>
+                  <div className="activity-feed-details">
+                    <p className="activity-feed-title">{act.subcategory}</p>
+                    <span className="activity-feed-meta">
                       {act.category.toUpperCase()} &bull; {formatDate(act.date)}
                     </span>
                   </div>
-                  <span style={{ fontWeight: 700, color: 'var(--danger)' }}>
+                  <span className="activity-feed-value" style={{ color: 'var(--danger)' }}>
                     +{formatCarbonValue(act.carbonKg)}
                   </span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p style={{ color: 'var(--text-muted)' }}>No activities logged yet.</p>
+            <p className="empty-state-text">No activities logged yet.</p>
           )}
         </Card>
       </div>
@@ -241,47 +187,27 @@ export const DashboardPage: React.FC = () => {
         tagName="section"
         className="equivalences-card"
       >
-        <div
-          className="equivalences-grid"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '1rem',
-            textAlign: 'center',
-          }}
-        >
-          <div>
-            <span style={{ fontSize: '2.5rem' }} aria-hidden="true">
+        <div className="equivalents-grid">
+          <div className="equivalent-card">
+            <span className="equivalent-icon" aria-hidden="true">
               🌳
             </span>
-            <p style={{ fontWeight: 800, fontSize: '1.5rem', margin: '0.5rem 0' }}>
-              {treesEquivalent}
-            </p>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-              Trees required to offset this footprint
-            </span>
+            <p className="equivalent-value">{treesEquivalent}</p>
+            <span className="equivalent-label">Trees required to offset this footprint</span>
           </div>
-          <div>
-            <span style={{ fontSize: '2.5rem' }} aria-hidden="true">
+          <div className="equivalent-card">
+            <span className="equivalent-icon" aria-hidden="true">
               🚗
             </span>
-            <p style={{ fontWeight: 800, fontSize: '1.5rem', margin: '0.5rem 0' }}>
-              {carKmEquivalent} km
-            </p>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-              Passenger car driving distance equivalent
-            </span>
+            <p className="equivalent-value">{carKmEquivalent} km</p>
+            <span className="equivalent-label">Passenger car driving distance equivalent</span>
           </div>
-          <div>
-            <span style={{ fontSize: '2.5rem' }} aria-hidden="true">
+          <div className="equivalent-card">
+            <span className="equivalent-icon" aria-hidden="true">
               💡
             </span>
-            <p style={{ fontWeight: 800, fontSize: '1.5rem', margin: '0.5rem 0' }}>
-              {electricityKwhEquivalent} kWh
-            </p>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-              Electricity usage carbon equivalent
-            </span>
+            <p className="equivalent-value">{electricityKwhEquivalent} kWh</p>
+            <span className="equivalent-label">Electricity usage carbon equivalent</span>
           </div>
         </div>
       </Card>

@@ -45,14 +45,16 @@ describe('GoalService Unit Tests', () => {
       const result = await goalService.createGoal('user-123', mockGoalInput as any);
 
       expect(activityRepository.getTotalEmissions).toHaveBeenCalled();
-      expect(goalRepository.create).toHaveBeenCalledWith(expect.objectContaining({
-        userId: 'user-123',
-        title: 'Reduce food emissions',
-        category: 'food',
-        targetReduction: 10,
-        baselineValue: 50,
-        status: 'active',
-      }));
+      expect(goalRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          userId: 'user-123',
+          title: 'Reduce food emissions',
+          category: 'food',
+          targetReduction: 10,
+          baselineValue: 50,
+          status: 'active',
+        }),
+      );
       expect(result).toEqual(mockGoal);
     });
   });
@@ -91,7 +93,10 @@ describe('GoalService Unit Tests', () => {
     it('should update successfully if owner', async () => {
       const mockGoal = { _id: 'goal-123', userId: 'user-123', title: 'Old Title' };
       (goalRepository.findById as jest.Mock).mockResolvedValue(mockGoal);
-      (goalRepository.updateById as jest.Mock).mockResolvedValue({ ...mockGoal, title: 'New Title' });
+      (goalRepository.updateById as jest.Mock).mockResolvedValue({
+        ...mockGoal,
+        title: 'New Title',
+      });
 
       const result = await goalService.updateGoal('user-123', 'goal-123', { title: 'New Title' });
       expect(goalRepository.updateById).toHaveBeenCalledWith('goal-123', { title: 'New Title' });

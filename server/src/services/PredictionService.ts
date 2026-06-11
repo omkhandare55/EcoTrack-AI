@@ -6,7 +6,7 @@ export class PredictionService {
    * Predicts the user's carbon footprint for the upcoming month using a linear
    * regression model applied to the last six months of historical emission data.
    * Defaults to a simple average and a lower confidence value if data is insufficient.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @returns A promise resolving to the emission prediction details (predicted value, confidence, and direction).
    */
@@ -58,7 +58,7 @@ export class PredictionService {
   /**
    * Calculates the linear regression parameters (slope and intercept) for a given series of data points.
    * Represents the formula: y = slope * x + intercept.
-   * 
+   *
    * @param data - The array of numerical values to run regression on.
    * @returns An object containing the computed slope and intercept.
    */
@@ -93,7 +93,7 @@ export class PredictionService {
 
   /**
    * Computes a simple moving average (SMA) for an array of numbers with a specified window size.
-   * 
+   *
    * @param data - The array of numbers to average.
    * @param window - The window size for the moving average calculation.
    * @returns An array of computed moving average points.
@@ -114,7 +114,7 @@ export class PredictionService {
   /**
    * Identifies the current weekly emission trend direction ('increasing', 'decreasing', or 'stable')
    * based on the last 3 months of historical data.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @returns A promise resolving to the trend direction.
    */
@@ -143,7 +143,7 @@ export class PredictionService {
   /**
    * Internally determines the trend direction based on the slope magnitude
    * relative to a 5% threshold of the moving average.
-   * 
+   *
    * @param slope - The calculated slope of the data regression.
    * @param movingAvg - The moving average array of values.
    * @returns The trend direction.

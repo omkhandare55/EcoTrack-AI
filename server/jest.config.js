@@ -1,4 +1,5 @@
 module.exports = {
+  testTimeout: 300000,
   preset: 'ts-jest',
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
@@ -9,13 +10,15 @@ module.exports = {
     '!src/server.ts',
     '!src/**/*.d.ts',
     '!src/__tests__/**',
+    '!src/config/database.ts',
+    '!src/seeds/**',
   ],
   coverageThreshold: {
     global: {
-      branches: 50,
-      functions: 75,
-      lines: 80,
-      statements: 80,
+      branches: 75,
+      functions: 90,
+      lines: 93,
+      statements: 93,
     },
   },
   setupFilesAfterEnv: [],

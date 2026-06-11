@@ -1,7 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
+import type { UseQueryResult } from '@tanstack/react-query';
 import { analyticsService } from '../services/analyticsService';
+import type { AnalyticsSummary, AnalyticsTrend, CategoryBreakdown, Prediction } from '../types';
 
-export const useAnalyticsSummary = () => {
+export const useAnalyticsSummary = (): UseQueryResult<AnalyticsSummary, Error> => {
   return useQuery({
     queryKey: ['analytics', 'summary'],
     queryFn: () => analyticsService.getSummary(),
@@ -12,7 +14,7 @@ export const useAnalyticsSummary = () => {
 export const useAnalyticsTrends = (
   period: 'day' | 'week' | 'month' | 'year',
   rangeDays?: number,
-) => {
+): UseQueryResult<AnalyticsTrend[], Error> => {
   return useQuery({
     queryKey: ['analytics', 'trends', period, rangeDays],
     queryFn: () => analyticsService.getTrends(period, rangeDays),
@@ -20,7 +22,10 @@ export const useAnalyticsTrends = (
   });
 };
 
-export const useAnalyticsBreakdown = (startDate?: string, endDate?: string) => {
+export const useAnalyticsBreakdown = (
+  startDate?: string,
+  endDate?: string,
+): UseQueryResult<CategoryBreakdown[], Error> => {
   return useQuery({
     queryKey: ['analytics', 'breakdown', startDate, endDate],
     queryFn: () => analyticsService.getBreakdown(startDate, endDate),
@@ -28,7 +33,16 @@ export const useAnalyticsBreakdown = (startDate?: string, endDate?: string) => {
   });
 };
 
-export const useComparison = () => {
+export interface ComparisonData {
+  currentWeek: number;
+  previousWeek: number;
+  weekChange: number;
+  currentMonth: number;
+  previousMonth: number;
+  monthChange: number;
+}
+
+export const useComparison = (): UseQueryResult<ComparisonData, Error> => {
   return useQuery({
     queryKey: ['analytics', 'comparison'],
     queryFn: () => analyticsService.getComparison(),
@@ -36,7 +50,7 @@ export const useComparison = () => {
   });
 };
 
-export const usePredictions = () => {
+export const usePredictions = (): UseQueryResult<Prediction, Error> => {
   return useQuery({
     queryKey: ['analytics', 'predictions'],
     queryFn: () => analyticsService.getPredictions(),

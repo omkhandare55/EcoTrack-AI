@@ -10,7 +10,7 @@ export class ChallengeRepository extends BaseRepository<IChallenge> {
 
   /**
    * Retrieves all challenges that are currently marked as active, sorted by points descending.
-   * 
+   *
    * @returns A promise resolving to an array of active challenge documents.
    */
   async findActiveChallenges(): Promise<IChallenge[]> {
@@ -20,7 +20,7 @@ export class ChallengeRepository extends BaseRepository<IChallenge> {
   /**
    * Retrieves the challenge progress records for a user, populating detailed challenge metadata.
    * sorted by last update date descending.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @returns A promise resolving to an array of challenge progress documents.
    */
@@ -35,7 +35,7 @@ export class ChallengeRepository extends BaseRepository<IChallenge> {
   /**
    * Marks a challenge as completed for today. Automatically computes logging streaks,
    * tracks dates of completion, handles one-time challenges, and creates a progress record if none exists.
-   * 
+   *
    * @param userId - The unique ID of the completing user.
    * @param challengeId - The unique ID of the challenge.
    * @returns A promise resolving to the updated challenge progress document.
@@ -102,7 +102,7 @@ export class ChallengeRepository extends BaseRepository<IChallenge> {
 
   /**
    * Retrieves the application leaderboard: users ranked by their total completed challenge dates count.
-   * 
+   *
    * @param limit - The maximum number of rankings to return. Defaults to 10.
    * @returns A promise resolving to the leaderboard rankings array.
    */

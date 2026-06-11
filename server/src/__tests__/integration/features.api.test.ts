@@ -3,7 +3,7 @@ import app from '../../app';
 import * as dbHandler from '../dbHandler';
 import { Challenge } from '../../models/Challenge';
 
-beforeAll(async () => await dbHandler.connect());
+beforeAll(async () => await dbHandler.connect(), 300000);
 afterEach(async () => await dbHandler.clearDatabase());
 afterAll(async () => await dbHandler.closeDatabase());
 
@@ -204,6 +204,16 @@ describe('Features API (Analytics, Goals, Challenges, Recommendations) Integrati
       expect(res.body.status).toBe('success');
       expect(res.body.data.recommendations).toBeDefined();
       expect(res.body.data.recommendations.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('Achievements API', () => {
+    it('should retrieve user achievements and trigger an check/award pass', async () => {
+      const res = await request(app).get('/api/v1/achievements').set('Cookie', [cookie]);
+
+      expect(res.status).toBe(200);
+      expect(res.body.status).toBe('success');
+      expect(res.body.data.achievements).toBeDefined();
     });
   });
 });

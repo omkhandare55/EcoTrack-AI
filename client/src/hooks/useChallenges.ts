@@ -1,7 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import type { UseQueryResult, UseMutationResult } from '@tanstack/react-query';
 import { challengeService } from '../services/challengeService';
+import type { Challenge, ChallengeProgress, LeaderboardEntry } from '../types';
 
-export const useChallenges = () => {
+export const useChallenges = (): UseQueryResult<Challenge[], Error> => {
   return useQuery({
     queryKey: ['challenges', 'list'],
     queryFn: () => challengeService.getChallenges(),
@@ -9,7 +11,7 @@ export const useChallenges = () => {
   });
 };
 
-export const useChallengeProgress = () => {
+export const useChallengeProgress = (): UseQueryResult<ChallengeProgress[], Error> => {
   return useQuery({
     queryKey: ['challenges', 'progress'],
     queryFn: () => challengeService.getProgress(),
@@ -17,7 +19,12 @@ export const useChallengeProgress = () => {
   });
 };
 
-export const useCompleteChallenge = () => {
+export const useCompleteChallenge = (): UseMutationResult<
+  { progress: ChallengeProgress },
+  Error,
+  string,
+  unknown
+> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -29,7 +36,7 @@ export const useCompleteChallenge = () => {
   });
 };
 
-export const useLeaderboard = (limit?: number) => {
+export const useLeaderboard = (limit?: number): UseQueryResult<LeaderboardEntry[], Error> => {
   return useQuery({
     queryKey: ['challenges', 'leaderboard', limit],
     queryFn: () => challengeService.getLeaderboard(limit),

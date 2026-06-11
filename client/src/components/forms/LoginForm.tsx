@@ -19,7 +19,7 @@ export const LoginForm: React.FC = () => {
   // Redirect to previously requested page, or dashboard
   const from = location.state?.from?.pathname || '/';
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     setErrorMsg(null);
     setIsLoading(true);
@@ -27,8 +27,9 @@ export const LoginForm: React.FC = () => {
     try {
       await login({ email, password });
       navigate(from, { replace: true });
-    } catch (err: any) {
-      setErrorMsg(err.response?.data?.message || 'Invalid email or password. Please try again.');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      setErrorMsg(error.response?.data?.message || 'Invalid email or password. Please try again.');
     } finally {
       setIsLoading(false);
     }

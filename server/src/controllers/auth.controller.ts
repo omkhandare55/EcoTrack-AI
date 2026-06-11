@@ -14,7 +14,7 @@ const cookieOptions = {
 /**
  * Controller endpoint to register a new user in the application.
  * Signs a JWT token and places it into an HTTP-only secure cookie.
- * 
+ *
  * @route POST /api/v1/auth/register
  * @access Public
  * @param req - Express request object containing registration payload (name, email, password).
@@ -45,7 +45,7 @@ export const register = catchAsync(async (req: Request, res: Response) => {
 /**
  * Controller endpoint to authenticate an existing user.
  * Signs a JWT token and places it into an HTTP-only secure cookie.
- * 
+ *
  * @route POST /api/v1/auth/login
  * @access Public
  * @param req - Express request object containing email and password.
@@ -75,7 +75,7 @@ export const login = catchAsync(async (req: Request, res: Response) => {
 
 /**
  * Controller endpoint to log out the user by clearing their session cookie.
- * 
+ *
  * @route POST /api/v1/auth/logout
  * @access Private
  * @param req - Express request object.
@@ -97,7 +97,7 @@ export const logout = catchAsync(async (_req: Request, res: Response) => {
 
 /**
  * Controller endpoint to retrieve the current user's profile info.
- * 
+ *
  * @route GET /api/v1/auth/me
  * @access Private
  * @param req - Express request containing the pre-verified user attachment.

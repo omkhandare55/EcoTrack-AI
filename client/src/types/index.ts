@@ -188,3 +188,9 @@ export interface RegisterData {
   password: string;
   confirmPassword?: string;
 }
+
+export interface LeaderboardEntry {
+  userId: string;
+  name: string;
+  points: number;
+}

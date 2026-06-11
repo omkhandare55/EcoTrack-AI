@@ -4,7 +4,7 @@ import { catchAsync } from '../middleware/errorHandler';
 
 /**
  * Controller endpoint to retrieve personalized recommendations based on the user's carbon footprint habits.
- * 
+ *
  * @route GET /api/v1/recommendations
  * @access Private
  * @param req - Express request object.

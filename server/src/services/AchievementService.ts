@@ -10,7 +10,7 @@ export class AchievementService {
    * Evaluates user statistics (activity log counts, consecutive days logging streaks,
    * total percentage reductions, goal completions, and challenge completions) and awards
    * any earned milestone badges that have not yet been granted.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @returns A promise resolving to an array of newly awarded achievement documents.
    */
@@ -76,7 +76,7 @@ export class AchievementService {
 
   /**
    * Retrieves all achievements earned by a user, sorted by earned date descending.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @returns A promise resolving to an array of the user's achievements.
    */
@@ -88,7 +88,7 @@ export class AchievementService {
 
   /**
    * Internally writes a new achievement document to reward the user.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @param badge - The metadata of the badge being awarded.
    * @returns A promise resolving to the created achievement.

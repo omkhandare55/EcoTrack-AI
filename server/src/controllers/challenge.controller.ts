@@ -4,7 +4,7 @@ import { catchAsync } from '../middleware/errorHandler';
 
 /**
  * Controller endpoint to retrieve all active challenges.
- * 
+ *
  * @route GET /api/v1/challenges
  * @access Private
  * @param req - Express request object.
@@ -24,7 +24,7 @@ export const getAll = catchAsync(async (_req: Request, res: Response) => {
 
 /**
  * Controller endpoint to retrieve the current user's challenge progress list.
- * 
+ *
  * @route GET /api/v1/challenges/progress
  * @access Private
  * @param req - Express request object.
@@ -45,7 +45,7 @@ export const getProgress = catchAsync(async (req: Request, res: Response) => {
 
 /**
  * Controller endpoint to mark a challenge as completed by the user.
- * 
+ *
  * @route POST /api/v1/challenges/:id/complete
  * @access Private
  * @param req - Express request object containing challenge ID in path params.
@@ -67,7 +67,7 @@ export const complete = catchAsync(async (req: Request, res: Response) => {
 
 /**
  * Controller endpoint to retrieve user leaderboard rankings based on completions.
- * 
+ *
  * @route GET /api/v1/challenges/leaderboard
  * @access Private
  * @param req - Express request object containing optional limit in query.

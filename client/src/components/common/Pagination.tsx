@@ -13,20 +13,20 @@ export const Pagination: React.FC<PaginationProps> = ({
 }) => {
   if (totalPages <= 1) return null;
 
-  const handlePrev = () => {
+  const handlePrev = (): void => {
     if (currentPage > 1) {
       onPageChange(currentPage - 1);
     }
   };
 
-  const handleNext = () => {
+  const handleNext = (): void => {
     if (currentPage < totalPages) {
       onPageChange(currentPage + 1);
     }
   };
 
   // Generate page numbers to show
-  const getPages = () => {
+  const getPages = (): number[] => {
     const pages = [];
     const maxVisible = 5;
     let start = Math.max(1, currentPage - 2);

@@ -40,16 +40,16 @@ const userSchema = new Schema<IUser>(
   {
     timestamps: true,
     toJSON: {
-      transform(_doc, ret) {
-        delete (ret as any).passwordHash;
-        delete (ret as any).__v;
+      transform(_doc: unknown, ret: Record<string, unknown>): Record<string, unknown> {
+        delete ret.passwordHash;
+        delete ret.__v;
         return ret;
       },
     },
     toObject: {
-      transform(_doc, ret) {
-        delete (ret as any).passwordHash;
-        delete (ret as any).__v;
+      transform(_doc: unknown, ret: Record<string, unknown>): Record<string, unknown> {
+        delete ret.passwordHash;
+        delete ret.__v;
         return ret;
       },
     },

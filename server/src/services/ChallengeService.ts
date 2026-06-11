@@ -6,7 +6,7 @@ import type { IChallenge, IChallengeProgress } from '../types';
 export class ChallengeService {
   /**
    * Retrieves all active challenges from the database, sorted by points descending.
-   * 
+   *
    * @returns A promise resolving to an array of active challenge documents.
    */
   async getChallenges(): Promise<IChallenge[]> {
@@ -16,7 +16,7 @@ export class ChallengeService {
   /**
    * Retrieves the current challenge progress list for a specific user.
    * Includes populated details about the associated challenges.
-   * 
+   *
    * @param userId - The unique ID of the user.
    * @returns A promise resolving to an array of challenge progress documents.
    */
@@ -27,7 +27,7 @@ export class ChallengeService {
   /**
    * Completes a specific challenge for a user, incrementing completion dates and streaks.
    * Awards points if appropriate and asynchronously checks for milestone achievements.
-   * 
+   *
    * @param userId - The unique ID of the completing user.
    * @param challengeId - The unique ID of the completed challenge.
    * @returns A promise resolving to the updated challenge progress document.
@@ -55,11 +55,13 @@ export class ChallengeService {
 
   /**
    * Retrieves the leader board rankings based on challenge activity completions.
-   * 
+   *
    * @param limit - The maximum number of entries to return. Defaults to 10.
    * @returns A promise resolving to the leaderboard rankings with totals and max streaks.
    */
-  async getLeaderboard(limit: number = 10) {
+  async getLeaderboard(
+    limit: number = 10,
+  ): Promise<{ userId: string; totalCompletions: number; totalStreak: number }[]> {
     return challengeRepository.getLeaderboard(limit);
   }
 }

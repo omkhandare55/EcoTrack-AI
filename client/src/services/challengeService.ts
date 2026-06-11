@@ -1,5 +1,5 @@
 import { apiClient } from './apiClient';
-import type { Challenge, ChallengeProgress } from '../types';
+import type { Challenge, ChallengeProgress, LeaderboardEntry } from '../types';
 
 export const challengeService = {
   async getChallenges(): Promise<Challenge[]> {
@@ -23,8 +23,8 @@ export const challengeService = {
     return res.data.data;
   },
 
-  async getLeaderboard(limit?: number): Promise<any[]> {
-    const res = await apiClient.get<{ status: string; data: { leaderboard: any[] } }>(
+  async getLeaderboard(limit?: number): Promise<LeaderboardEntry[]> {
+    const res = await apiClient.get<{ status: string; data: { leaderboard: LeaderboardEntry[] } }>(
       '/challenges/leaderboard',
       {
         params: { limit },

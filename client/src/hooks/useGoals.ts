@@ -1,8 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import type { UseQueryResult, UseMutationResult } from '@tanstack/react-query';
 import { goalService } from '../services/goalService';
-import type { GoalFormData } from '../types';
+import type { Goal, GoalFormData } from '../types';
 
-export const useGoals = () => {
+export const useGoals = (): UseQueryResult<Goal[], Error> => {
   return useQuery({
     queryKey: ['goals'],
     queryFn: () => goalService.getGoals(),
@@ -10,7 +11,12 @@ export const useGoals = () => {
   });
 };
 
-export const useCreateGoal = () => {
+export const useCreateGoal = (): UseMutationResult<
+  { goal: Goal },
+  Error,
+  GoalFormData,
+  unknown
+> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -21,7 +27,12 @@ export const useCreateGoal = () => {
   });
 };
 
-export const useUpdateGoal = () => {
+export const useUpdateGoal = (): UseMutationResult<
+  { goal: Goal },
+  Error,
+  { id: string; data: Partial<GoalFormData> },
+  unknown
+> => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -33,7 +44,7 @@ export const useUpdateGoal = () => {
   });
 };
 
-export const useDeleteGoal = () => {
+export const useDeleteGoal = (): UseMutationResult<void, Error, string, unknown> => {
   const queryClient = useQueryClient();
 
   return useMutation({
