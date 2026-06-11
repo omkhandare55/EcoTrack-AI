@@ -7,7 +7,12 @@ import { BADGES } from '../utils/constants';
 
 export class AchievementService {
   /**
-   * Run all milestone checks and award any new badges.
+   * Evaluates user statistics (activity log counts, consecutive days logging streaks,
+   * total percentage reductions, goal completions, and challenge completions) and awards
+   * any earned milestone badges that have not yet been granted.
+   * 
+   * @param userId - The unique ID of the user.
+   * @returns A promise resolving to an array of newly awarded achievement documents.
    */
   async checkAndAward(userId: string): Promise<IAchievement[]> {
     const awarded: IAchievement[] = [];
@@ -70,7 +75,10 @@ export class AchievementService {
   }
 
   /**
-   * All achievements for a user.
+   * Retrieves all achievements earned by a user, sorted by earned date descending.
+   * 
+   * @param userId - The unique ID of the user.
+   * @returns A promise resolving to an array of the user's achievements.
    */
   async getUserAchievements(userId: string): Promise<IAchievement[]> {
     return Achievement.find({ userId }).sort({ earnedAt: -1 }).lean<IAchievement[]>().exec();
@@ -78,6 +86,13 @@ export class AchievementService {
 
   // ─── Private helpers ──────────────────────────────────────────────
 
+  /**
+   * Internally writes a new achievement document to reward the user.
+   * 
+   * @param userId - The unique ID of the user.
+   * @param badge - The metadata of the badge being awarded.
+   * @returns A promise resolving to the created achievement.
+   */
   private async award(
     userId: string,
     badge: { badge: string; title: string; description: string },

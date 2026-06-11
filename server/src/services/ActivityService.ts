@@ -7,7 +7,10 @@ import type { CreateActivityInput, QueryActivitiesInput } from '../validators/ac
 
 export class ActivityService {
   /**
-   * Log a new activity and trigger achievement checks.
+   * Log a new activity in the database, calculate its carbon emission values, and trigger achievement updates.
+   * @param userId - The ID of the user logging the activity.
+   * @param data - The activity input payload (category, value, unit, etc.).
+   * @returns A promise resolving to the created activity document.
    */
   async logActivity(userId: string, data: CreateActivityInput): Promise<IActivity> {
     const carbonKg = calculateEmission(data.category, data.subcategory, data.value, data.unit);
@@ -32,7 +35,10 @@ export class ActivityService {
   }
 
   /**
-   * Paginated activities with optional filters.
+   * Fetch a paginated and filtered list of activities logged by a specific user.
+   * @param userId - The ID of the user requesting the list.
+   * @param query - The pagination, filter, and sorting query parameters.
+   * @returns A promise resolving to a paginated response containing matching activity documents.
    */
   async getActivities(
     userId: string,
@@ -49,7 +55,11 @@ export class ActivityService {
   }
 
   /**
-   * Single activity by ID – verifies ownership.
+   * Retrieve a single activity by its ID, checking that the user owns the activity document.
+   * @param userId - The ID of the authenticated user requesting the activity.
+   * @param activityId - The ID of the activity document to retrieve.
+   * @returns A promise resolving to the matching activity document.
+   * @throws {AppError} 404 if not found, or 403 if user is not the owner.
    */
   async getActivityById(userId: string, activityId: string): Promise<IActivity> {
     const activity = await activityRepository.findById(activityId);
@@ -63,7 +73,11 @@ export class ActivityService {
   }
 
   /**
-   * Delete an activity – verifies ownership.
+   * Delete an activity by its ID, validating that the requesting user owns the activity document.
+   * @param userId - The ID of the user deleting the activity.
+   * @param activityId - The ID of the activity document to delete.
+   * @returns A promise resolving when deletion is complete.
+   * @throws {AppError} 404 if not found, or 403 if user is not the owner.
    */
   async deleteActivity(userId: string, activityId: string): Promise<void> {
     const activity = await activityRepository.findById(activityId);

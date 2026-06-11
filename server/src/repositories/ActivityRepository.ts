@@ -15,7 +15,12 @@ export class ActivityRepository extends BaseRepository<IActivity> {
   }
 
   /**
-   * Paginated + filtered activities for a user.
+   * Retrieves a paginated and filtered list of activities for a specific user.
+   * Supports filtering by category and date ranges.
+   * 
+   * @param userId - The unique ID of the user.
+   * @param options - Pagination options, sorting constraints, and filter fields.
+   * @returns A promise resolving to a paginated response of activity documents.
    */
   async findByUserId(userId: string, options: FindManyOptions & ActivityFilters = {}) {
     const filter: FilterQuery<IActivity> = { userId };
@@ -38,7 +43,14 @@ export class ActivityRepository extends BaseRepository<IActivity> {
   }
 
   /**
-   * Aggregate emissions grouped by time period.
+   * Aggregates total carbon emissions grouped by a specific time period (day, week, month, year)
+   * for a user within a specified timeframe.
+   * 
+   * @param userId - The unique ID of the user.
+   * @param period - The grouping time period ('day', 'week', 'month', 'year').
+   * @param startDate - The starting boundary date.
+   * @param endDate - The ending boundary date.
+   * @returns A promise resolving to an array of trend points containing dates, emission totals, and activity counts.
    */
   async getEmissionsByPeriod(
     userId: string,
@@ -77,7 +89,12 @@ export class ActivityRepository extends BaseRepository<IActivity> {
   }
 
   /**
-   * Category breakdown for a date range.
+   * Computes category-wise emission totals and percentages for a specific user and timeframe.
+   * 
+   * @param userId - The unique ID of the user.
+   * @param startDate - The starting boundary date.
+   * @param endDate - The ending boundary date.
+   * @returns A promise resolving to an array of category breakdown summaries, sorted by total emissions descending.
    */
   async getCategoryBreakdown(
     userId: string,
@@ -119,7 +136,12 @@ export class ActivityRepository extends BaseRepository<IActivity> {
   }
 
   /**
-   * Total emissions for a date range.
+   * Computes the grand total carbon emissions (in kg) for a specific user and timeframe.
+   * 
+   * @param userId - The unique ID of the user.
+   * @param startDate - The starting boundary date.
+   * @param endDate - The ending boundary date.
+   * @returns A promise resolving to the total carbon emissions in kg.
    */
   async getTotalEmissions(userId: string, startDate: Date, endDate: Date): Promise<number> {
     const pipeline: PipelineStage[] = [
@@ -142,7 +164,11 @@ export class ActivityRepository extends BaseRepository<IActivity> {
   }
 
   /**
-   * Daily average over the last N days.
+   * Computes the daily average carbon emissions (in kg/day) for a specific user over the last N days.
+   * 
+   * @param userId - The unique ID of the user.
+   * @param days - The number of days to look back.
+   * @returns A promise resolving to the calculated daily average.
    */
   async getDailyAverage(userId: string, days: number): Promise<number> {
     const startDate = new Date();

@@ -9,14 +9,20 @@ export class ChallengeRepository extends BaseRepository<IChallenge> {
   }
 
   /**
-   * All currently active challenges.
+   * Retrieves all challenges that are currently marked as active, sorted by points descending.
+   * 
+   * @returns A promise resolving to an array of active challenge documents.
    */
   async findActiveChallenges(): Promise<IChallenge[]> {
     return Challenge.find({ isActive: true }).sort({ points: -1 }).lean<IChallenge[]>().exec();
   }
 
   /**
-   * Get a user's progress on all challenges they've started.
+   * Retrieves the challenge progress records for a user, populating detailed challenge metadata.
+   * sorted by last update date descending.
+   * 
+   * @param userId - The unique ID of the user.
+   * @returns A promise resolving to an array of challenge progress documents.
    */
   async getUserProgress(userId: string): Promise<IChallengeProgress[]> {
     return ChallengeProgress.find({ userId })
@@ -27,8 +33,12 @@ export class ChallengeRepository extends BaseRepository<IChallenge> {
   }
 
   /**
-   * Mark a challenge as completed for today.
-   * Updates streak and completedDates; creates progress record if none exists.
+   * Marks a challenge as completed for today. Automatically computes logging streaks,
+   * tracks dates of completion, handles one-time challenges, and creates a progress record if none exists.
+   * 
+   * @param userId - The unique ID of the completing user.
+   * @param challengeId - The unique ID of the challenge.
+   * @returns A promise resolving to the updated challenge progress document.
    */
   async completeChallenge(userId: string, challengeId: string): Promise<IChallengeProgress> {
     const now = new Date();
@@ -91,7 +101,10 @@ export class ChallengeRepository extends BaseRepository<IChallenge> {
   }
 
   /**
-   * Leaderboard: users ranked by total completed challenge dates (activity).
+   * Retrieves the application leaderboard: users ranked by their total completed challenge dates count.
+   * 
+   * @param limit - The maximum number of rankings to return. Defaults to 10.
+   * @returns A promise resolving to the leaderboard rankings array.
    */
   async getLeaderboard(
     limit: number = 10,

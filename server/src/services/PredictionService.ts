@@ -3,7 +3,12 @@ import type { IPrediction, IAnalyticsTrend } from '../types';
 
 export class PredictionService {
   /**
-   * Predict next month's emissions using linear regression on historical data.
+   * Predicts the user's carbon footprint for the upcoming month using a linear
+   * regression model applied to the last six months of historical emission data.
+   * Defaults to a simple average and a lower confidence value if data is insufficient.
+   * 
+   * @param userId - The unique ID of the user.
+   * @returns A promise resolving to the emission prediction details (predicted value, confidence, and direction).
    */
   async predictEmissions(userId: string): Promise<IPrediction> {
     // Get last 6 months of monthly data
@@ -51,7 +56,11 @@ export class PredictionService {
   }
 
   /**
-   * Simple linear regression: y = slope * x + intercept.
+   * Calculates the linear regression parameters (slope and intercept) for a given series of data points.
+   * Represents the formula: y = slope * x + intercept.
+   * 
+   * @param data - The array of numerical values to run regression on.
+   * @returns An object containing the computed slope and intercept.
    */
   linearRegression(data: number[]): { slope: number; intercept: number } {
     const n = data.length;
@@ -83,7 +92,11 @@ export class PredictionService {
   }
 
   /**
-   * Moving average with a given window size.
+   * Computes a simple moving average (SMA) for an array of numbers with a specified window size.
+   * 
+   * @param data - The array of numbers to average.
+   * @param window - The window size for the moving average calculation.
+   * @returns An array of computed moving average points.
    */
   movingAverage(data: number[], window: number): number[] {
     if (data.length === 0 || window <= 0) return [];
@@ -99,7 +112,11 @@ export class PredictionService {
   }
 
   /**
-   * Determine trend direction from slope and moving average.
+   * Identifies the current weekly emission trend direction ('increasing', 'decreasing', or 'stable')
+   * based on the last 3 months of historical data.
+   * 
+   * @param userId - The unique ID of the user.
+   * @returns A promise resolving to the trend direction.
    */
   async getTrend(userId: string): Promise<'increasing' | 'decreasing' | 'stable'> {
     const endDate = new Date();
@@ -123,6 +140,14 @@ export class PredictionService {
 
   // ─── Private helpers ──────────────────────────────────────────────
 
+  /**
+   * Internally determines the trend direction based on the slope magnitude
+   * relative to a 5% threshold of the moving average.
+   * 
+   * @param slope - The calculated slope of the data regression.
+   * @param movingAvg - The moving average array of values.
+   * @returns The trend direction.
+   */
   private determineTrend(
     slope: number,
     movingAvg: number[],

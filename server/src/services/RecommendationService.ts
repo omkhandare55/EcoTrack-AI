@@ -133,8 +133,13 @@ const ALL_TIPS: Record<string, RecommendationTemplate[]> = {
 
 export class RecommendationService {
   /**
-   * Analyse a user's activity patterns and return personalised recommendations
-   * sorted by estimated impact.
+   * Analyzes the user's activity patterns over the past month to generate
+   * personalized sustainability recommendations.
+   * Categories with higher emission volumes are prioritized. If no activity
+   * data is present, default recommendations are returned.
+   * 
+   * @param userId - The unique ID of the user.
+   * @returns A promise resolving to an array of personalized recommendations.
    */
   async getRecommendations(userId: string): Promise<IRecommendation[]> {
     const { start, end } = getDateRange('month');
@@ -184,6 +189,12 @@ export class RecommendationService {
     });
   }
 
+  /**
+   * Helper method to map a sorted category index to a priority label ('high', 'medium', or 'low').
+   * 
+   * @param index - The index of the category in the sorted emissions list.
+   * @returns The corresponding priority string.
+   */
   private indexToPriority(index: number): 'high' | 'medium' | 'low' {
     if (index === 0) return 'high';
     if (index <= 2) return 'medium';

@@ -2,6 +2,16 @@ import { Request, Response } from 'express';
 import { activityService } from '../services/ActivityService';
 import { catchAsync } from '../middleware/errorHandler';
 
+/**
+ * Controller endpoint to log a new environmental activity.
+ * Calculates carbon emissions based on input factors and persists the log in the database.
+ * 
+ * @route POST /api/v1/activities
+ * @access Private
+ * @param req - Express request object containing the logged activity payload.
+ * @param res - Express response object.
+ * @returns A promise resolving to the created activity details.
+ */
 export const create = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user!._id.toString();
   const activity = await activityService.logActivity(userId, req.body);
@@ -14,6 +24,16 @@ export const create = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+/**
+ * Controller endpoint to retrieve a paginated list of activities logged by the user.
+ * Supports filtering by category and date ranges.
+ * 
+ * @route GET /api/v1/activities
+ * @access Private
+ * @param req - Express request object with query parameters.
+ * @param res - Express response object.
+ * @returns A promise resolving to the paginated list of activity records.
+ */
 export const getAll = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user!._id.toString();
   const result = await activityService.getActivities(userId, req.query as any);
@@ -24,6 +44,17 @@ export const getAll = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+/**
+ * Controller endpoint to retrieve a single logged activity by its database ID.
+ * Verifies that the requesting user is the owner of the activity.
+ * 
+ * @route GET /api/v1/activities/:id
+ * @access Private
+ * @param req - Express request object containing the activity ID in path params.
+ * @param res - Express response object.
+ * @returns A promise resolving to the requested activity details.
+ * @throws {AppError} 404 if activity not found, or 403 if user is unauthorized.
+ */
 export const getById = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user!._id.toString();
   const { id } = req.params;
@@ -37,6 +68,17 @@ export const getById = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+/**
+ * Controller endpoint to delete a logged activity by its database ID.
+ * Verifies that the requesting user is the owner of the activity.
+ * 
+ * @route DELETE /api/v1/activities/:id
+ * @access Private
+ * @param req - Express request object containing the activity ID in path params.
+ * @param res - Express response object.
+ * @returns A promise resolving when the activity is deleted (status 204).
+ * @throws {AppError} 404 if activity not found, or 403 if user is unauthorized.
+ */
 export const deleteActivity = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user!._id.toString();
   const { id } = req.params;

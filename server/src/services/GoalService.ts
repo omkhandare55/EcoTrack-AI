@@ -6,7 +6,14 @@ import type { CreateGoalInput, UpdateGoalInput } from '../validators/goal.valida
 
 export class GoalService {
   /**
-   * Create a new goal, computing baseline from recent historical data.
+   * Creates a new emission reduction goal for a user.
+   * Computes a baseline using the user's historical emissions for the selected category 
+   * over the corresponding period (e.g., last 7 days for a weekly goal).
+   * 
+   * @param userId - The unique ID of the user creating the goal.
+   * @param data - The goal creation payload (title, category, target reduction, period, etc.).
+   * @returns A promise resolving to the created goal document.
+   * @throws {AppError} If goal parameters are invalid.
    */
   async createGoal(userId: string, data: CreateGoalInput): Promise<IGoal> {
     const now = new Date();
@@ -43,14 +50,23 @@ export class GoalService {
   }
 
   /**
-   * All goals for a user.
+   * Retrieves all goals associated with a specific user, sorted newest first.
+   * 
+   * @param userId - The unique ID of the user.
+   * @returns A promise resolving to an array of goal documents.
    */
   async getGoals(userId: string): Promise<IGoal[]> {
     return goalRepository.findByUserId(userId);
   }
 
   /**
-   * Update a goal – verifies ownership.
+   * Updates an existing goal's attributes after verifying user ownership.
+   * 
+   * @param userId - The unique ID of the authenticated user.
+   * @param goalId - The unique ID of the goal to update.
+   * @param data - The partial goal fields to update.
+   * @returns A promise resolving to the updated goal document.
+   * @throws {AppError} 404 if goal is not found, 403 if user is not authorized, or 500 on database update failure.
    */
   async updateGoal(userId: string, goalId: string, data: UpdateGoalInput): Promise<IGoal> {
     const goal = await goalRepository.findById(goalId);
@@ -69,7 +85,12 @@ export class GoalService {
   }
 
   /**
-   * Delete a goal – verifies ownership.
+   * Deletes an existing goal after verifying user ownership.
+   * 
+   * @param userId - The unique ID of the authenticated user.
+   * @param goalId - The unique ID of the goal to delete.
+   * @returns A promise resolving when the goal has been successfully deleted.
+   * @throws {AppError} 404 if goal is not found, or 403 if user is not authorized.
    */
   async deleteGoal(userId: string, goalId: string): Promise<void> {
     const goal = await goalRepository.findById(goalId);
@@ -83,7 +104,12 @@ export class GoalService {
   }
 
   /**
-   * Recalculate progress for all active goals.
+   * Recalculates progress for all active goals of a user.
+   * Compares baseline emissions with current emissions in the goal's timeframe to update
+   * the completion percentage, and updates the status to 'completed' or 'failed' if bounds are reached.
+   * 
+   * @param userId - The unique ID of the user.
+   * @returns A promise resolving when all active goals' progress is updated.
    */
   async updateGoalProgress(userId: string): Promise<void> {
     const activeGoals = await goalRepository.findActiveGoals(userId);

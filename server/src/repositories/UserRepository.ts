@@ -8,14 +8,22 @@ export class UserRepository extends BaseRepository<IUser> {
   }
 
   /**
-   * Find a user by email. Includes passwordHash for authentication.
+   * Finds a user document by their email address.
+   * Explicitly includes the `passwordHash` field, which is excluded from standard queries by default.
+   * 
+   * @param email - The email address of the user.
+   * @returns A promise resolving to the user document, or null if not found.
    */
   async findByEmail(email: string): Promise<IUser | null> {
     return User.findOne({ email: email.toLowerCase() }).select('+passwordHash').exec();
   }
 
   /**
-   * Create a new user. Password hashing is handled by the model pre-save hook.
+   * Inserts a new user document into the database.
+   * Password hashing is automatically handled by the pre-save schema hook.
+   * 
+   * @param data - The user registration data containing name, email, and password.
+   * @returns A promise resolving to the created user document.
    */
   async createUser(data: { name: string; email: string; password: string }): Promise<IUser> {
     const user = await User.create({
