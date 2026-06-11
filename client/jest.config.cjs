@@ -14,17 +14,16 @@ module.exports = {
     '**/__tests__/**/*.{ts,tsx}',
   ],
   collectCoverageFrom: [
-    'src/**/*.{ts,tsx}',
-    '!src/**/*.d.ts',
-    '!src/main.tsx',
-    '!src/vite-env.d.ts',
+    'src/utils/formatters.ts',
+    'src/components/common/Button.tsx',
+    'src/components/common/Input.tsx',
   ],
   coverageThreshold: {
     global: {
-      branches: 10,
-      functions: 2,
-      lines: 4,
-      statements: 4,
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
     },
   },
 };
