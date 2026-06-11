@@ -27,7 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     queryFn: async () => {
       try {
         return await authService.getMe();
-      } catch (err) {
+      } catch {
         // Return null instead of throwing on 401 to keep state clean
         return null;
       }
