@@ -8,7 +8,7 @@ COPY package*.json ./
 COPY server/package*.json ./server/
 
 # Install dependencies using root lockfile
-RUN npm ci --workspace=server
+RUN npm ci --workspace=server --ignore-scripts
 
 # Copy server source code
 COPY server/ ./server/
@@ -28,7 +28,7 @@ COPY package*.json ./
 COPY server/package*.json ./server/
 
 # Install only production dependencies
-RUN npm ci --omit=dev --workspace=server
+RUN npm ci --omit=dev --workspace=server --ignore-scripts
 
 # Copy compiled files
 COPY --from=builder /usr/src/app/server/dist ./server/dist
