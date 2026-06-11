@@ -56,7 +56,7 @@ Run the following commands from the **root directory** of the repository:
      --platform managed \
      --allow-unauthenticated \
      --region us-central1 \
-     --set-env-vars="NODE_ENV=production,MONGODB_URI=mongodb+srv://omkh4242g_db_user:sFAgSVHMCrC5HvSu@cluster0.2x1asns.mongodb.net/ecotrack-ai?retryWrites=true&w=majority&appName=Cluster0,JWT_SECRET=YOUR_SECURE_JWT_SECRET,COOKIE_SECRET=YOUR_SECURE_COOKIE_SECRET,CORS_ORIGIN=https://YOUR_VERCEL_FRONTEND_URL.vercel.app"
+     --set-env-vars="NODE_ENV=production,MONGODB_URI=mongodb+srv://<db_username>:<db_password>@cluster0.xxxxxx.mongodb.net/ecotrack-ai?retryWrites=true&w=majority,JWT_SECRET=YOUR_SECURE_JWT_SECRET,COOKIE_SECRET=YOUR_SECURE_COOKIE_SECRET,CORS_ORIGIN=https://YOUR_VERCEL_FRONTEND_URL.vercel.app"
    ```
    *(Ensure to replace `PROJECT_ID` with your GCP Project ID, set your own secure secret keys, and replace `CORS_ORIGIN` with your Vercel URL once the frontend is live).*
 
